@@ -7,7 +7,6 @@ import {
   toggleProductAvailability,
 } from "@/app/admin/_actions/products";
 import { useRouter } from "next/navigation";
-import { router } from "next/client";
 
 export function ActiveToggleDropdownItem({
   id,
