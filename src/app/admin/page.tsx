@@ -14,16 +14,11 @@ async function getSalesData() {
     _sum: { pricePaidInCents: true },
     _count: true,
   });
-  await wait(1000); //only for loading spinner
 
   return {
     amount: (data._sum.pricePaidInCents || 0) / 100,
     numberOfSales: data._count,
   };
-}
-
-export function wait(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms)); //only for loading spinner
 }
 
 async function getUserData() {
