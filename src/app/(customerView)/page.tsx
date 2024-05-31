@@ -16,7 +16,7 @@ const getMostPopularProducts = cache(
     });
   },
   ["/", "getMostPopularProducts"],
-  { revalidate: 60 * 60 * 24 },
+  { revalidate: 60 },
 );
 
 const getNewestProducts = cache(() => {
