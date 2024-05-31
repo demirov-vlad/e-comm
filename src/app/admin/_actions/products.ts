@@ -5,6 +5,7 @@ import db from "@/db/db";
 import fs from "fs/promises";
 import { notFound, redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { supabase } from "@/db/supabase";
 
 const fileSchema = z.instanceof(File, { message: "Required" });
 const imageSchema = fileSchema.refine(
@@ -26,16 +27,39 @@ export async function addProduct(prevState: unknown, formData: FormData) {
   }
 
   const data = result.data;
-  await fs.mkdir("products", { recursive: true });
-  const filePath = `products/${crypto.randomUUID()}-${data.file.name}`;
-  await fs.writeFile(filePath, Buffer.from(await data.file.arrayBuffer()));
 
-  await fs.mkdir("public/products", { recursive: true });
-  const imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`;
-  await fs.writeFile(
-    `public${imagePath}`,
-    Buffer.from(await data.image.arrayBuffer()),
-  );
+  const filePath = `${process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL + "file" + data.file.name}`;
+  await supabase.storage
+    .from("soft-products")
+    .upload(
+      "file" + data.file.name,
+      Buffer.from(await data.file.arrayBuffer()),
+      {
+        upsert: true,
+      },
+    );
+
+  const imagePath = `${process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL + "img" + data.image.name}`;
+  await supabase.storage
+    .from("soft-products")
+    .upload(
+      "img" + data.image.name,
+      Buffer.from(await data.image.arrayBuffer()),
+      {
+        upsert: true,
+      },
+    );
+
+  // await fs.mkdir("products", { recursive: true });
+  // const filePath = `products/${crypto.randomUUID()}-${data.file.name}`;
+  // await fs.writeFile(filePath, Buffer.from(await data.file.arrayBuffer()));
+  //
+  // await fs.mkdir("public/products", { recursive: true });
+  // const imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`;
+  // await fs.writeFile(
+  //   `public${imagePath}`,
+  //   Buffer.from(await data.image.arrayBuffer()),
+  // );
 
   await db.product.create({
     data: {

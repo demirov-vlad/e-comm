@@ -29,6 +29,9 @@ export async function POST(req: NextRequest) {
       email,
       orders: { create: { productId, pricePaidInCents } },
     };
+
+    console.log(userFields);
+
     const {
       orders: [order],
     } = await db.user.upsert({
@@ -37,6 +40,8 @@ export async function POST(req: NextRequest) {
       update: userFields,
       select: { orders: { orderBy: { createdAt: "desc" }, take: 1 } },
     });
+
+    console.log(order);
 
     const downloadVerification = await db.downloadVerification.create({
       data: {
