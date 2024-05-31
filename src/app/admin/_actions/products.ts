@@ -2,10 +2,10 @@
 
 import { z } from "zod";
 import db from "@/db/db";
-import fs from "fs/promises";
 import { notFound, redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { supabase } from "@/db/supabase";
+import { getFilenameFromUrl } from "@/lib/utils";
 
 const fileSchema = z.instanceof(File, { message: "Required" });
 const imageSchema = fileSchema.refine(
@@ -50,17 +50,6 @@ export async function addProduct(prevState: unknown, formData: FormData) {
       },
     );
 
-  // await fs.mkdir("products", { recursive: true });
-  // const filePath = `products/${crypto.randomUUID()}-${data.file.name}`;
-  // await fs.writeFile(filePath, Buffer.from(await data.file.arrayBuffer()));
-  //
-  // await fs.mkdir("public/products", { recursive: true });
-  // const imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`;
-  // await fs.writeFile(
-  //   `public${imagePath}`,
-  //   Buffer.from(await data.image.arrayBuffer()),
-  // );
-
   await db.product.create({
     data: {
       isAvailableForPurchase: false,
@@ -95,21 +84,36 @@ export async function updateProduct(
   const product = await db.product.findUnique({ where: { id } });
   if (product == null) return notFound();
 
+  const fileToRemove = getFilenameFromUrl(product.filePath);
   let filePath = product.filePath;
   if (data.file != null && data.file.size > 0) {
-    await fs.unlink(product.filePath);
-    filePath = `products/${crypto.randomUUID()}-${data.file.name}`;
-    await fs.writeFile(filePath, Buffer.from(await data.file.arrayBuffer()));
+    await supabase.storage.from("soft-products").remove([`${fileToRemove}`]);
+    filePath = `${process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL + "file" + data.file.name}`;
+    await supabase.storage
+      .from("soft-products")
+      .upload(
+        "file" + data.file.name,
+        Buffer.from(await data.file.arrayBuffer()),
+        {
+          upsert: true,
+        },
+      );
   }
 
+  const imageToRemove = getFilenameFromUrl(product.imagePath);
   let imagePath = product.imagePath;
   if (data.image != null && data.image.size > 0) {
-    await fs.unlink(`public${product.imagePath}`);
-    imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`;
-    await fs.writeFile(
-      `public${imagePath}`,
-      Buffer.from(await data.image.arrayBuffer()),
-    );
+    await supabase.storage.from("soft-products").remove([`${imageToRemove}`]);
+    imagePath = `${process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL + "file" + data.image.name}`;
+    await supabase.storage
+      .from("soft-products")
+      .upload(
+        "file" + data.image.name,
+        Buffer.from(await data.image.arrayBuffer()),
+        {
+          upsert: true,
+        },
+      );
   }
 
   await db.product.update({
@@ -142,8 +146,10 @@ export async function deleteProduct(id: string) {
   const product = await db.product.delete({ where: { id } });
   if (product == null) return notFound();
 
-  await fs.unlink(product.filePath);
-  await fs.unlink(`public${product.imagePath}`);
+  const fileToRemove = getFilenameFromUrl(product.filePath);
+  await supabase.storage.from("soft-products").remove([`${fileToRemove}`]);
+  const imageToRemove = getFilenameFromUrl(product.imagePath);
+  await supabase.storage.from("soft-products").remove([`${imageToRemove}`]);
 
   revalidatePath("/");
   revalidatePath("/products");

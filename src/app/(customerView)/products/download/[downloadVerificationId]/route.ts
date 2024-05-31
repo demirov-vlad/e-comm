@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/db/db";
 import { supabase } from "@/db/supabase";
+import { notFound } from "next/navigation";
+import { getFilenameFromUrl } from "@/lib/utils";
 
 export async function GET(
   request: NextRequest,
@@ -19,17 +21,13 @@ export async function GET(
     );
   }
 
-  const getFilenameFromUrl = (url: string) => {
-    return url.substring(url.lastIndexOf("/") + 1);
-  };
-
   try {
     const file = await supabase.storage
       .from("soft-products")
       .download(`${getFilenameFromUrl(data.product.filePath)}`);
 
     if (!file || file.error || !file.data) {
-      return NextResponse.error();
+      return notFound();
     }
 
     const extension = data.product.filePath.split(".").pop();
@@ -48,6 +46,9 @@ export async function GET(
     });
   } catch (error) {
     console.error("Error downloading file:", error);
-    return NextResponse.error();
+    return NextResponse.json(
+      { error: "Error downloading file" },
+      { status: 500 },
+    );
   }
 }
