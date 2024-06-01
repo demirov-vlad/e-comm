@@ -7,8 +7,8 @@ import React from "react";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "e-comm",
-  description: "Store",
+  title: "SoftStore",
+  description: "Software Online Store",
 };
 
 export default function RootLayout({
