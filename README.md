@@ -14,6 +14,7 @@ Visit the live site: [SoftStore](https://soft-store.vercel.app)
 - **TypeScript**: Typed superset of JavaScript.
 - **Resend**: Service for sending emails, used for order confirmation and history.
 - **Supabase**: Database and storage solution.
+- **STRIPE**: Payment processing for handling transactions.
 - **shadcn UI**: UI component library.
 - **Next.js Caching**: Caching strategy for enhanced performance.
 
@@ -44,6 +45,10 @@ Visit the live site: [SoftStore](https://soft-store.vercel.app)
   (Includes download links with expiration times for security)
 - **Order History Email**: Customers can request their order history via email. (Also includes download links)
 
+### Payment Features
+- **Stripe Integration**: Secure payment processing.
+- **Test Purchasing**: Use card number 4242 4242 4242 4242 with expiration 04/44 and CVV 444 for test transactions.
+
 ## Getting Started
 
 To get a local copy of the project up and running, follow these steps:
@@ -55,6 +60,7 @@ Ensure you have the following installed:
 - Node.js
 - npm or yarn
 - PostgreSQL (for Supabase)
+- Stripe account (for payment processing)
 
 ### Installation
 
@@ -87,7 +93,12 @@ Ensure you have the following installed:
     npx prisma migrate dev
     ```
 
-5. Start the development server:
+5. Set up Stripe:
+
+- Create a Stripe account and get your API keys.
+- Add your Stripe API keys to the .env file.
+
+6. Start the development server:
 
     ```bash
     npm run dev
