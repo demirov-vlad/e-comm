@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# SoftStore
+
+SoftStore is an online store that specializes in selling software products. Users can browse, purchase, and download software products seamlessly. The platform is built using modern web technologies to ensure a smooth and efficient user experience.
+
+## Live Demo
+
+Visit the live site: [SoftStore](https://soft-store.vercel.app)
+
+## Tech Stack
+
+- **Next.js**: Framework for server-rendered React applications.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+- **Prisma**: ORM for database management.
+- **TypeScript**: Typed superset of JavaScript.
+- **Resend**: Service for sending emails, used for order confirmation and history.
+- **Supabase**: Database and storage solution.
+- **shadcn UI**: UI component library.
+- **Next.js Caching**: Caching strategy for enhanced performance.
+
+## Features
+
+### Admin Features
+
+- **Admin Page**: Access via [soft-store.vercel.app/admin](https://soft-store.vercel.app/admin) (Login: admin | Password: crocodile)
+- **Admin Dashboard**: Overview of store metrics and performance.
+- **Admin Authentication**: Secure login for admin users.
+- **Admin Customers Page**: Manage customer information.
+- **Admin Sales Page**: View and manage sales data.
+
+### Customer Features
+
+- **Home Page**:
+    - **Most Popular Products Section**: Highlights top-selling products.
+    - **Newest Products Section**: Displays recently added products.
+- **Products Page**: Browse all available software products.
+- **Product Purchase Page**: Detailed view of a product with purchase options.
+- **My Orders Page**:
+    - Send order history email.
+    - Download purchased product from received order history email.
+
+### Email Features
+
+- **Order Confirmation Email**: Sent to customers after a successful purchase.
+  (Includes download links with expiration times for security)
+- **Order History Email**: Customers can request their order history via email. (Also includes download links)
 
 ## Getting Started
 
-First, run the development server:
+To get a local copy of the project up and running, follow these steps:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Prerequisites
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ensure you have the following installed:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Node.js
+- npm or yarn
+- PostgreSQL (for Supabase)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Installation
 
-## Learn More
+1. Clone the repository:
 
-To learn more about Next.js, take a look at the following resources:
+    ```bash
+    git clone https://github.com/demirov-vlad/soft-store.git
+    cd soft-store
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. Install dependencies:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+    ```bash
+    npm install
+    # or
+    yarn install
+    ```
 
-## Deploy on Vercel
+3. Set up environment variables:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   Create a `.env` file in the root of the project and add your environment variables. Refer to `.env.example` for the required variables.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+4. Set up the database:
+
+   Ensure your PostgreSQL server is running and create a new database for the project. Update your `.env` file with your database connection string.
+
+   Run Prisma migrations to set up the database schema:
+
+    ```bash
+    npx prisma migrate dev
+    ```
+
+5. Start the development server:
+
+    ```bash
+    npm run dev
+    # or
+    yarn dev
+    ```
+
+   The application should now be running on [http://localhost:3000](http://localhost:3000).
+
+## Contributing
+
+Contributions are welcome! Please follow these steps to contribute:
+
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes.
+4. Commit your changes with a descriptive message.
+5. Push to your fork and submit a pull request.
+
+---
